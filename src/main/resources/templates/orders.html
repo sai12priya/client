@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory System | Orders</title>
+    <style>
+        :root {
+            --indigo: #4b0082;
+            --indigo-light: #6a20b4;
+            --indigo-dark: #3a0068;
+            --green: #2ecc71;
+            --green-dark: #27ae60;
+            --black: #111827;
+            --white: #f9fafb;
+            --gray: #e5e7eb;
+            --gray-dark: #6b7280;
+            --sidebar-width: 250px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--white);
+            color: var(--black);
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* Side Navigation */
+        .side-nav {
+            width: var(--sidebar-width);
+            background-color: var(--indigo-dark);
+            color: var(--white);
+            height: 100vh;
+            position: fixed;
+            padding: 1.5rem 0;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--white);
+            padding: 0 1.5rem 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: block;
+            color: var(--white);
+            text-decoration: none;
+            padding: 0.8rem 1.5rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        .nav-link.active {
+            background-color: var(--indigo);
+            border-left: 4px solid var(--green);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            color: var(--indigo);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: var(--gray-dark);
+        }
+
+        /* Orders Table */
+        .orders-container {
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            color: var(--indigo);
+            font-weight: 600;
+        }
+
+        .order-filter select {
+            padding: 0.5rem;
+            border: 1px solid var(--gray);
+            border-radius: 4px;
+            background-color: var(--white);
+            color: var(--black);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--gray);
+        }
+
+        th {
+            background-color: rgba(75, 0, 130, 0.05);
+            color: var(--indigo);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+
+        tr:hover {
+            background-color: rgba(75, 0, 130, 0.02);
+        }
+
+        .status {
+            display: inline-block;
+            padding: 0.4rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .status.pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .status.shipped {
+            background-color: #cce5ff;
+            color: #004085;
+        }
+
+        .status.completed {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .side-nav {
+                width: 220px;
+            }
+            .main-content {
+                margin-left: 220px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .side-nav {
+                width: 100%;
+                height: auto;
+                position: static;
+                padding: 1rem;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .nav-menu {
+                display: flex;
+                overflow-x: auto;
+                padding-bottom: 0.5rem;
+            }
+            .nav-item {
+                margin-bottom: 0;
+                margin-right: 0.5rem;
+            }
+            .nav-link {
+                padding: 0.5rem 1rem;
+                white-space: nowrap;
+            }
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Side Navigation -->
+    <nav class="side-nav">
+        <div class="logo">Inventory System</div>
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="/user/dashboard" class="nav-link">Dashboard</a>
+            </li>
+            <li class="nav-item">
+                <a href="/user/products" class="nav-link">All Products</a>
+            </li>
+            <li class="nav-item">
+                <a href="/user/orders" class="nav-link active">Orders</a>
+            </li>
+            <li class="nav-item">
+                <a href="/user/cart" class="nav-link">Cart</a>
+            </li>
+            <li class="nav-item">
+                <a href="/user/invoices" class="nav-link">Invoices</a>
+            </li>
+            <li class="nav-item">
+                <form th:action="@{/logout}" method="post">
+                    <button type="submit" class="nav-link" style="background:none;border:none;cursor:pointer;width:100%;text-align:left;">
+                        Logout
+                    </button>
+                </form>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">Your Orders</h1>
+            <p class="page-subtitle">View your order history</p>
+        </div>
+        
+        <div class="orders-container">
+            <div class="section-header">
+                <h2 class="section-title">All Orders</h2>
+                <div class="order-filter">
+                    <form th:action="@{/orders}" method="get">
+                        <select name="status" onchange="this.form.submit()">
+                            <option value="">All Statuses</option>
+                            <option value="PENDING" th:selected="${status} == 'PENDING'">Pending</option>
+                            <option value="SHIPPED" th:selected="${status} == 'SHIPPED'">Shipped</option>
+                            <option value="COMPLETED" th:selected="${status} == 'COMPLETED'">Completed</option>
+                        </select>
+                    </form>
+                </div>
+            </div>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Date</th>
+                        <th>Items</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="order : ${orders}">
+                        <td th:text="${'#ORD-' + order.id}">#ORD-2023-105</td>
+                        <td th:text="${#temporals.format(order.orderDate, 'yyyy-MM-dd')}">2023-06-15</td>
+                        <td th:text="${order.totalItems}">3</td>
+                        <td th:text="${'$' + #numbers.formatDecimal(order.totalAmount, 1, 2)}">$279.97</td>
+                        <td>
+                            <span th:classappend="${order.status == 'COMPLETED'} ? 'status completed' : 
+                                                (${order.status == 'SHIPPED'} ? 'status shipped' : 'status pending')"
+                                  th:text="${order.status}">Completed</span>
+                        </td>
+                    </tr>
+                    
+                    <!-- Empty State -->
+                    <tr th:if="${orders == null or orders.empty}">
+                        <td colspan="5" style="text-align: center; padding: 2rem;">
+                            No orders found
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</body>
+</html>

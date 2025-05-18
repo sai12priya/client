@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Management | Admin Dashboard</title>
+    <style>
+        :root {
+            --indigo: #4b0082;
+            --indigo-light: #6a20b4;
+            --green: #2ecc71;
+            --green-dark: #27ae60;
+            --white: #ffffff;
+            --black: #333333;
+            --gray: #f5f5f5;
+            --gray-dark: #e0e0e0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f9f9f9;
+            color: var(--black);
+        }
+
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 250px;
+            background-color: var(--indigo);
+            color: var(--white);
+            padding: 20px 0;
+        }
+
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar-header h2 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-menu {
+            margin-top: 20px;
+        }
+
+        .nav-item {
+            list-style: none;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: var(--white);
+            text-decoration: none;
+            transition: all 0.3s;
+            gap: 10px;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background-color: var(--indigo-light);
+            border-left: 4px solid var(--green);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: var(--indigo);
+            font-size: 28px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--indigo);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* Invoice Management */
+        .invoice-management {
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 25px;
+        }
+
+        .invoice-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--gray-dark);
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--black);
+        }
+
+        .tab-btn.active {
+            border-bottom: 3px solid var(--green);
+            color: var(--indigo);
+            font-weight: 600;
+        }
+
+        .invoice-tools {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+        }
+
+        .search-box {
+            position: relative;
+            width: 300px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid var(--gray-dark);
+            border-radius: 5px;
+        }
+
+        .filter-btn, .export-btn {
+            background-color: var(--white);
+            border: 1px solid var(--gray-dark);
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .export-btn {
+            background-color: var(--green);
+            color: var(--white);
+            border: none;
+        }
+
+        .export-btn:hover {
+            background-color: var(--green-dark);
+        }
+
+        
+		  .invoice-cards-container {
+		    display: grid;
+		    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+		    gap: 20px;
+		    padding: 20px;
+		  }
+
+		  .invoice-card {
+		    background-color: white;
+		    border-radius: 12px;
+		    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+		    overflow: hidden;
+		    transition: transform 0.3s ease, box-shadow 0.3s ease;
+		    border-top: 4px solid var(--card-color);
+		  }
+
+		  .invoice-card:hover {
+		    transform: translateY(-5px);
+		    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+		  }
+
+		  .card-header {
+		    display: flex;
+		    justify-content: space-between;
+		    align-items: center;
+		    padding: 16px;
+		    background-color: #f9fafb;
+		    border-bottom: 1px solid #e5e7eb;
+		  }
+
+		  .invoice-id {
+		    font-weight: 600;
+		    color: var(--card-color);
+		  }
+
+		  .invoice-status {
+		    padding: 4px 12px;
+		    border-radius: 20px;
+		    font-size: 12px;
+		    font-weight: 600;
+		    text-transform: uppercase;
+		  }
+
+		  .status-paid {
+		    background-color: #d1fae5;
+		    color: #065f46;
+		  }
+
+		  .status-pending {
+		    background-color: #fef3c7;
+		    color: #92400e;
+		  }
+
+		  .status-overdue {
+		    background-color: #fee2e2;
+		    color: #991b1b;
+		  }
+
+		  .card-body {
+		    padding: 16px;
+		  }
+
+		  .card-row {
+		    display: flex;
+		    justify-content: space-between;
+		    margin-bottom: 12px;
+		  }
+
+		  .label {
+		    color: #6b7280;
+		    font-size: 14px;
+		  }
+
+		  .value {
+		    font-weight: 500;
+		    color: #111827;
+		  }
+
+		  .products-section {
+		    margin: 16px 0;
+		    border-top: 1px dashed #e5e7eb;
+		    border-bottom: 1px dashed #e5e7eb;
+		    padding: 12px 0;
+		  }
+
+		  .product-item {
+		    display: flex;
+		    justify-content: space-between;
+		    margin-bottom: 8px;
+		  }
+
+		  .product-item:last-child {
+		    margin-bottom: 0;
+		  }
+
+		  .product-name {
+		    color: #4b5563;
+		  }
+
+		  .product-price {
+		    font-weight: 500;
+		  }
+
+		  .total-row {
+		    margin-top: 12px;
+		    padding-top: 8px;
+		    border-top: 1px solid #e5e7eb;
+		  }
+
+		  .total-row .value {
+		    font-weight: 700;
+		    color: var(--card-color);
+		    font-size: 18px;
+		  }
+
+		  .card-footer {
+		    display: flex;
+		    justify-content: space-between;
+		    padding: 12px 16px;
+		    background-color: #f9fafb;
+		    border-top: 1px solid #e5e7eb;
+		    font-size: 14px;
+		  }
+
+		  .company-name {
+		    font-weight: 500;
+		  }
+
+		  .due-date {
+		    color: #6b7280;
+		  }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .invoice-tools {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .search-box {
+                width: 100%;
+            }
+            
+            .action-btns {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>InventoryPro</h2>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="/admin/dashboard" class="nav-link">
+                        Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/admin/vendor" class="nav-link">
+                        Vendors
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/admin/purchase" class="nav-link">
+                        Make Purchase
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/admin/invoice" class="nav-link">
+                        Invoices
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/admin/product/all" class="nav-link">
+                        All Products
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        Logout
+                    </a>
+                </li>
+                
+            </ul>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h1>Invoice Management</h1>
+                <div class="user-profile">
+                    <div class="user-avatar">AD</div>
+                    <span>Admin User</span>
+                </div>
+            </div>
+            
+            <div class="invoice-management">
+                <div class="invoice-tabs">
+                    <button class="tab-btn active">Customer Invoices</button>
+                    <button class="tab-btn">Vendor Invoices</button>
+                </div>
+                
+                <div class="invoice-tools">
+                    <div class="search-box">
+                        <input type="text" placeholder="Search invoices...">
+                    </div>
+                    <div>
+                        <button class="filter-btn">Filter</button>
+                        <button class="export-btn">Export</button>
+                    </div>
+                </div>
+                
+                <div class="invoice-cards-container">
+  <!-- Invoice Card 1 -->
+  <div class="invoice-card" th:each="purchase : ${purchases}" th:style="'--card-color: #4f46e5;'">
+    <div class="card-header">
+      <span class="invoice-id" th:text="'INV-' + ${purchase.id}">INV-2023-001</span>
+      <span class="invoice-status status-paid">Paid</span>
+    </div>
+    <div class="card-body">
+      <div class="card-row">
+        <span class="label value">Purchase Date</span>
+        <span class="value" th:text="${purchase.purchaseDate}">2023-06-15</span>
+      </div>
+      <div class="card-row">
+        <span class="label value">Vendor</span>
+        <span class="value" th:text="${purchase.vendor.vendorName}">ABC Corporation</span>
+      </div>
+	  <div class="product-item">
+	  <span class="product-name value" th:text="${purchase.vendor.product.name}">Premium Laptops (x5)</span>
+	  <span class="product-price" th:text="'₹' +${purchase.price}">$1,245.00</span>
+	  </div>
+      <div class="card-row total-row">
+        <span class="label value">Total Amount</span>
+        <span class="value" th:text="'₹' + ${#numbers.formatDecimal(purchase.totalAmount, 1, 2)}">$1,395.00</span>
+      </div>
+    </div>
+    <div class="card-footer">
+      <span class="company-name value">IMS Solutions Inc.</span>
+      <span class="due-date value" th:text="'Due: ' + ${purchase.expectedDeliveryDate}">Due: 2023-07-15</span>
+    </div>
+</div>
+
+
+</div>
+
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>

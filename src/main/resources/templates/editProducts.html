@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>All Products | Admin Dashboard</title>
+<style>
+:root {
+	--indigo: #4b0082;
+	--indigo-light: #6a20b4;
+	--green: #2ecc71;
+	--green-dark: #27ae60;
+	--white: #ffffff;
+	--black: #333333;
+	--gray: #f5f5f5;
+	--gray-dark: #e0e0e0;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+	background-color: #f9f9f9;
+	color: var(--black);
+}
+
+.dashboard {
+	display: flex;
+	min-height: 100vh;
+}
+
+/* Sidebar Navigation */
+.sidebar {
+	width: 250px;
+	background-color: var(--indigo);
+	color: var(--white);
+	padding: 20px 0;
+}
+
+.sidebar-header {
+	padding: 0 20px 20px;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-header h2 {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.nav-menu {
+	margin-top: 20px;
+}
+
+.nav-item {
+	list-style: none;
+}
+
+.nav-link {
+	display: flex;
+	align-items: center;
+	padding: 12px 20px;
+	color: var(--white);
+	text-decoration: none;
+	transition: all 0.3s;
+	gap: 10px;
+}
+
+.nav-link:hover, .nav-link.active {
+	background-color: var(--indigo-light);
+	border-left: 4px solid var(--green);
+}
+
+/* Main Content */
+.main-content {
+	flex: 1;
+	padding: 30px;
+}
+
+.header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 30px;
+}
+
+.header h1 {
+	color: var(--indigo);
+	font-size: 28px;
+}
+
+.user-profile {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.user-avatar {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	background-color: var(--indigo);
+	color: var(--white);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: bold;
+}
+
+/* Product Management */
+
+/* Responsive */
+@media ( max-width : 768px) {
+	.modal-content {
+		width: 90%;
+		margin: 10% auto;
+	}
+	.input-row {
+		flex-direction: column;
+		gap: 0;
+	}
+}
+/* Responsive */
+@media ( max-width : 768px) {
+	.product-grid {
+		grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+	}
+	.product-tools {
+		flex-direction: column;
+		gap: 10px;
+	}
+	.search-box {
+		width: 100%;
+	}
+}
+
+/* Product Form Container */
+.product-form {
+	background-color: var(--white);
+	border-radius: 8px;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+	padding: 30px;
+	max-width: 700px;
+	margin: 0 auto;
+}
+
+.product-form h2 {
+	font-size: 1.6rem;
+	color: var(--indigo);
+	margin-bottom: 25px;
+	text-align: center;
+}
+
+/* Input Groups */
+.input-group {
+	margin-bottom: 20px;
+}
+
+.input-group label {
+	display: block;
+	margin-bottom: 8px;
+	color: var(--black);
+	font-weight: 500;
+	font-size: 0.95rem;
+}
+
+.product-input {
+	width: 100%;
+	padding: 12px 15px;
+	border: 1px solid var(--gray-dark);
+	border-radius: 6px;
+	font-size: 1rem;
+	background-color: var(--white);
+	transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.product-input:focus {
+	outline: none;
+	border-color: var(--indigo-light);
+	box-shadow: 0 0 0 2px rgba(107, 33, 168, 0.2);
+}
+
+textarea.product-input {
+	min-height: 100px;
+	resize: vertical;
+}
+
+.product-input[disabled] {
+	background-color: #f0f0f0;
+	color: #888;
+	cursor: not-allowed;
+}
+
+/* Row Layout */
+.input-row {
+	display: flex;
+	gap: 20px;
+}
+
+.input-row .input-group {
+	flex: 1;
+}
+
+/* Footer Buttons */
+.form-footer {
+	display: flex;
+	justify-content: flex-end;
+	gap: 12px;
+	margin-top: 30px;
+}
+
+.form-btn {
+	padding: 10px 22px;
+	border-radius: 6px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: background-color 0.2s;
+	font-size: 0.95rem;
+	border: none;
+}
+
+.cancel-btn {
+	background-color: var(--gray);
+	color: var(--black);
+	border: 1px solid var(--gray-dark);
+}
+
+.cancel-btn:hover {
+	background-color: var(--gray-dark);
+}
+
+.save-btn {
+	background-color: var(--green);
+	color: var(--black);
+}
+
+.save-btn:hover {
+	background-color: var(--green);
+}
+
+/* Responsive Adjustments */
+@media ( max-width : 768px) {
+	.input-row {
+		flex-direction: column;
+		gap: 0;
+	}
+	.form-footer {
+		flex-direction: column;
+		align-items: stretch;
+	}
+}
+</style>
+</head>
+<body>
+	<div class="dashboard">
+		<!-- Sidebar Navigation -->
+		<div class="sidebar">
+			<div class="sidebar-header">
+				<h2>InventoryPro</h2>
+			</div>
+			<ul class="nav-menu">
+				<li class="nav-item"><a href="/admin/dashboard"
+					class="nav-link"> Dashboard </a></li>
+				<li class="nav-item"><a href="/admin/vendor" class="nav-link">
+						Vendors </a></li>
+				<li class="nav-item"><a href="/admin/purchase"
+					class="nav-link active"> Make Purchase </a></li>
+				<li class="nav-item"><a href="/admin/invoice" class="nav-link">
+						Invoices </a></li>
+				<li class="nav-item"><a href="/admin/product/all"
+					class="nav-link"> All Products </a></li>
+				<li class="nav-item"><a href="#" class="nav-link"> Logout </a>
+				</li>
+			</ul>
+		</div>
+
+		<!-- Main Content -->
+		<div class="main-content">
+			<div class="header">
+				<h1>All Products</h1>
+				<div class="user-profile">
+					<div class="user-avatar">AD</div>
+					<span>Admin User</span>
+				</div>
+			</div>
+
+			<div class="product-management">
+
+
+				<div class="product-grid">
+					<!-- Product Card 1 -->
+					<!-- Loop through a list of products if provided -->
+
+
+					<div class="product-form">
+						<h2>Edit Product</h2>
+						<form th:action="@{/admin/product/update}" th:object="${product}"
+							method="post">
+							<!-- Hidden input for Product ID -->
+							<input type="hidden" th:field="*{id}" />
+
+							<div class="input-group">
+								<label for="editName">Product Name</label> <input type="text"
+									id="editName" class="product-input" th:field="*{name}"
+									placeholder="Enter product name">
+							</div>
+
+							<div class="input-group">
+								<label for="editDescription">Description</label>
+								<textarea id="editDescription" class="product-input"
+									th:field="*{description}"
+									placeholder="Enter product description"></textarea>
+							</div>
+
+							<div class="input-row">
+								<div class="input-group">
+									<label for="editPrice">Price (₹)</label> <input type="text"
+										id="editPrice" class="product-input" th:field="*{price}"
+										placeholder="Enter price" disabled>
+								</div>
+								<div class="input-group">
+									<label for="editQuantity">Quantity</label> <input type="text"
+										id="editQuantity" class="product-input"
+										th:field="*{quantityAvailable}" placeholder="Enter quantity"
+										disabled>
+								</div>
+							</div>
+
+							<div class="form-footer">
+								<a href="/admin/product/all">
+									<button type="button" class="form-btn cancel-btn">Cancel</button>
+								</a>
+								<button type="submit" class="form-btn save-btn">Save
+									Changes</button>
+							</div>
+						</form>
+
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		// Get the modal
+		const modal = document.getElementById("editProductModal");
+
+		function closeModal() {
+			modal.style.display = "none";
+			document.body.style.overflow = "auto";
+		}
+
+		// Close when clicking outside modal
+		window.onclick = function(event) {
+			if (event.target == modal) {
+				closeModal();
+			}
+		}
+	</script>
+
+</body>
+</html>

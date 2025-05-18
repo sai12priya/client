@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ShopSphere | Checkout</title>
+<style>
+:root {
+	--indigo: #4b0082;
+	--indigo-light: #6a20b4;
+	--indigo-dark: #3a0068;
+	--green: #2ecc71;
+	--green-dark: #27ae60;
+	--black: #111827;
+	--white: #f9fafb;
+	--gray: #e5e7eb;
+	--gray-dark: #6b7280;
+	--sidebar-width: 250px;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+	background-color: var(--white);
+	color: var(--black);
+	min-height: 100vh;
+	display: flex;
+}
+
+/* Side Navigation */
+.side-nav {
+	width: var(--sidebar-width);
+	background-color: var(--indigo-dark);
+	color: var(--white);
+	height: 100vh;
+	position: fixed;
+	padding: 1.5rem 0;
+}
+
+.logo {
+	font-size: 1.5rem;
+	font-weight: 700;
+	color: var(--white);
+	padding: 0 1.5rem 1.5rem;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+	margin-bottom: 1.5rem;
+}
+
+.alert {
+	padding: 20px;
+	font-size: bold;
+}
+
+.alert-sucess {
+	color: green;
+}
+
+.alert-danger {
+	color: red;
+}
+
+.nav-menu {
+	list-style: none;
+}
+
+.nav-item {
+	margin-bottom: 0.5rem;
+}
+
+.nav-link {
+	display: block;
+	color: var(--white);
+	text-decoration: none;
+	padding: 0.8rem 1.5rem;
+	font-weight: 500;
+	transition: all 0.2s;
+}
+
+.nav-link:hover {
+	background-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-link.active {
+	background-color: var(--indigo);
+	border-left: 4px solid var(--green);
+}
+
+/* Main Content */
+.main-content {
+	flex: 1;
+	margin-left: var(--sidebar-width);
+	padding: 2rem;
+}
+
+/* Checkout Header */
+.checkout-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 2rem;
+	padding-bottom: 1rem;
+	border-bottom: 1px solid var(--gray);
+}
+
+.checkout-title {
+	font-size: 1.8rem;
+	color: var(--indigo);
+	font-weight: 700;
+}
+
+.steps {
+	display: flex;
+	gap: 1rem;
+}
+
+.step {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	font-size: 0.9rem;
+}
+
+.step-number {
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+	background-color: var(--gray);
+	color: var(--gray-dark);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: 600;
+}
+
+.step.active .step-number {
+	background-color: var(--indigo);
+	color: white;
+}
+
+.step.completed .step-number {
+	background-color: var(--green);
+	color: white;
+}
+
+/* Checkout Sections */
+.checkout-container {
+	display: flex;
+	gap: 2rem;
+}
+
+.checkout-form {
+	flex: 2;
+}
+
+.order-summary {
+	flex: 1;
+	background-color: var(--white);
+	border: 1px solid var(--gray);
+	border-radius: 8px;
+	padding: 1.5rem;
+}
+
+.section {
+	background-color: var(--white);
+	border: 1px solid var(--gray);
+	border-radius: 8px;
+	padding: 1.5rem;
+	margin-bottom: 1.5rem;
+}
+
+.section-title {
+	font-size: 1.3rem;
+	color: var(--indigo);
+	font-weight: 700;
+	margin-bottom: 1.5rem;
+	padding-bottom: 1rem;
+	border-bottom: 1px solid var(--gray);
+}
+
+.form-group {
+	margin-bottom: 1.5rem;
+}
+
+.form-label {
+	display: block;
+	margin-bottom: 0.5rem;
+	font-weight: 500;
+	color: var(--gray-dark);
+}
+
+.form-input {
+	width: 100%;
+	padding: 0.8rem;
+	border: 1px solid var(--gray);
+	border-radius: 6px;
+	font-size: 1rem;
+	transition: all 0.2s;
+}
+
+.form-input:focus {
+	outline: none;
+	border-color: var(--indigo);
+	box-shadow: 0 0 0 2px rgba(75, 0, 130, 0.1);
+}
+
+.form-row {
+	display: flex;
+	gap: 1rem;
+}
+
+.form-row .form-group {
+	flex: 1;
+}
+
+/* Payment Methods */
+.payment-methods {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+.payment-method {
+	display: flex;
+	align-items: center;
+	padding: 1rem;
+	border: 1px solid var(--gray);
+	border-radius: 6px;
+	cursor: pointer;
+	transition: all 0.2s;
+}
+
+.payment-method:hover {
+	border-color: var(--indigo);
+}
+
+.payment-method.selected {
+	border-color: var(--indigo);
+	background-color: rgba(75, 0, 130, 0.05);
+}
+
+.payment-method input {
+	margin-right: 1rem;
+}
+
+.payment-icon {
+	width: 40px;
+	height: 40px;
+	margin-right: 1rem;
+	object-fit: contain;
+}
+
+/* Order Summary */
+.summary-title {
+	font-size: 1.3rem;
+	color: var(--indigo);
+	font-weight: 700;
+	margin-bottom: 1.5rem;
+	padding-bottom: 1rem;
+	border-bottom: 1px solid var(--gray);
+}
+
+.summary-item {
+	display: flex;
+	align-items: center;
+	margin-bottom: 1rem;
+	padding-bottom: 1rem;
+	border-bottom: 1px solid var(--gray);
+}
+
+.summary-item-image {
+	width: 60px;
+	height: 60px;
+	background-color: var(--gray);
+	border-radius: 4px;
+	margin-right: 1rem;
+	overflow: hidden;
+	flex-shrink: 0;
+}
+
+.summary-item-image img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.summary-item-details {
+	flex: 1;
+}
+
+.summary-item-name {
+	font-size: 0.9rem;
+	font-weight: 500;
+	margin-bottom: 0.3rem;
+}
+
+.summary-item-price {
+	font-size: 0.9rem;
+	color: var(--gray-dark);
+}
+
+.summary-item-quantity {
+	font-size: 0.9rem;
+	color: var(--gray-dark);
+}
+
+.summary-row {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 1rem;
+}
+
+.summary-label {
+	color: var(--gray-dark);
+}
+
+.summary-value {
+	font-weight: 500;
+}
+
+.divider {
+	height: 1px;
+	background-color: var(--gray);
+	margin: 1.5rem 0;
+}
+
+.total-row {
+	font-weight: 700;
+	font-size: 1.1rem;
+	color: var(--indigo);
+}
+
+.place-order-btn {
+	width: 100%;
+	padding: 1rem;
+	background-color: var(--green);
+	color: white;
+	border: none;
+	border-radius: 6px;
+	font-weight: 600;
+	font-size: 1rem;
+	margin-top: 1rem;
+	cursor: pointer;
+	transition: all 0.2s;
+}
+
+.place-order-btn:hover {
+	background-color: var(--green-dark);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+	.side-nav {
+		width: 220px;
+	}
+	.main-content {
+		margin-left: 220px;
+	}
+}
+
+@media (max-width: 768px) {
+	.side-nav {
+		width: 100%;
+		height: auto;
+		position: static;
+		padding: 1rem;
+	}
+	.main-content {
+		margin-left: 0;
+	}
+	.nav-menu {
+		display: flex;
+		overflow-x: auto;
+		padding-bottom: 0.5rem;
+	}
+	.nav-item {
+		margin-bottom: 0;
+		margin-right: 0.5rem;
+	}
+	.nav-link {
+		padding: 0.5rem 1rem;
+		white-space: nowrap;
+	}
+	.checkout-container {
+		flex-direction: column;
+	}
+	.order-summary {
+		order: -1;
+		margin-bottom: 2rem;
+	}
+	.steps {
+		display: none;
+	}
+}
+</style>
+</head>
+<body>
+	<!-- Side Navigation -->
+	<nav class="side-nav">
+		<div class="logo">ShopSphere</div>
+		<ul class="nav-menu">
+			<li class="nav-item"><a href="/user/dashboard" class="nav-link">Dashboard</a>
+			</li>
+			<li class="nav-item"><a href="/user/products" class="nav-link">All
+					Products</a></li>
+			<li class="nav-item"><a href="/user/orders" class="nav-link">Orders</a>
+			</li>
+			<li class="nav-item"><a href="/user/cart" class="nav-link">Cart</a>
+			</li>
+			<li class="nav-item"><a href="/user/invoices" class="nav-link">Invoices</a>
+			</li>
+		</ul>
+	</nav>
+
+	<!-- Main Content -->
+	<main class="main-content">
+		<!-- Checkout Header -->
+		<div class="checkout-header">
+			<h1 class="checkout-title">Checkout</h1>
+			<div class="steps">
+				<div class="step completed">
+					<div class="step-number">1</div>
+					<div class="step-name">Cart</div>
+				</div>
+				<div class="step active">
+					<div class="step-number">2</div>
+					<div class="step-name">Information</div>
+				</div>
+				<div class="step">
+					<div class="step-number">3</div>
+					<div class="step-name">Payment</div>
+				</div>
+				<div class="step">
+					<div class="step-number">4</div>
+					<div class="step-name">Confirmation</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Success/Error Messages -->
+		<div th:if="${success}" class="alert alert-success"
+			th:text="${success}"></div>
+		<div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+		<div class="checkout-container">
+			<!-- Checkout Form -->
+			<div class="checkout-form">
+				<!-- Shipping Information -->
+				<div class="section">
+					<h2 class="section-title">Shipping Information</h2>
+					<form id="shipping-form">
+						<div class="form-row">
+							<div class="form-group">
+								<label for="first-name" class="form-label">First Name</label>
+								<input type="text" id="first-name" class="form-input" required>
+							</div>
+							<div class="form-group">
+								<label for="last-name" class="form-label">Last Name</label>
+								<input type="text" id="last-name" class="form-input" required>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="address" class="form-label">Address</label>
+							<input type="text" id="address" class="form-input" required>
+						</div>
+						<div class="form-group">
+							<label for="address2" class="form-label">Address 2 (Optional)</label>
+							<input type="text" id="address2" class="form-input">
+						</div>
+						<div class="form-row">
+							<div class="form-group">
+								<label for="city" class="form-label">City</label>
+								<input type="text" id="city" class="form-input" required>
+							</div>
+							<div class="form-group">
+								<label for="state" class="form-label">State/Province</label>
+								<input type="text" id="state" class="form-input" required>
+							</div>
+							<div class="form-group">
+								<label for="zip" class="form-label">ZIP/Postal Code</label>
+								<input type="text" id="zip" class="form-input" required>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="country" class="form-label">Country</label>
+							<select id="country" class="form-input" required>
+								<option value="">Select Country</option>
+								<option value="US">United States</option>
+								<option value="IN">India</option>
+								<option value="UK">United Kingdom</option>
+								<option value="CA">Canada</option>
+								<option value="AU">Australia</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="phone" class="form-label">Phone Number</label>
+							<input type="tel" id="phone" class="form-input" required>
+						</div>
+					</form>
+				</div>
+
+				<!-- Payment Method -->
+				<div class="section">
+					<h2 class="section-title">Payment Method</h2>
+					<div class="payment-methods">
+						<label class="payment-method selected">
+							<input type="radio" name="payment-method" value="credit-card" checked>
+							<img src="https://cdn-icons-png.flaticon.com/512/179/179457.png" alt="Credit Card" class="payment-icon">
+							<span>Credit/Debit Card</span>
+						</label>
+						<label class="payment-method">
+							<input type="radio" name="payment-method" value="paypal">
+							<img src="https://cdn-icons-png.flaticon.com/512/174/174861.png" alt="PayPal" class="payment-icon">
+							<span>PayPal</span>
+						</label>
+						<label class="payment-method">
+							<input type="radio" name="payment-method" value="upi">
+							<img src="https://cdn-icons-png.flaticon.com/512/825/825454.png" alt="UPI" class="payment-icon">
+							<span>UPI Payment</span>
+						</label>
+						<label class="payment-method">
+							<input type="radio" name="payment-method" value="cod">
+							<img src="https://cdn-icons-png.flaticon.com/512/2331/2331895.png" alt="Cash on Delivery" class="payment-icon">
+							<span>Cash on Delivery</span>
+						</label>
+					</div>
+
+					<!-- Credit Card Form (shown when credit card is selected) -->
+					<div id="credit-card-form" style="margin-top: 1.5rem;">
+						<div class="form-group">
+							<label for="card-number" class="form-label">Card Number</label>
+							<input type="text" id="card-number" class="form-input" placeholder="1234 5678 9012 3456">
+						</div>
+						<div class="form-row">
+							<div class="form-group">
+								<label for="expiry-date" class="form-label">Expiry Date</label>
+								<input type="text" id="expiry-date" class="form-input" placeholder="MM/YY">
+							</div>
+							<div class="form-group">
+								<label for="cvv" class="form-label">CVV</label>
+								<input type="text" id="cvv" class="form-input" placeholder="123">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="card-name" class="form-label">Name on Card</label>
+							<input type="text" id="card-name" class="form-input">
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Order Summary -->
+			<div class="order-summary">
+				<h3 class="summary-title">Order Summary</h3>
+
+				<!-- Order Items -->
+				<div th:each="item : ${cartItems}">
+					<div class="summary-item">
+						<div class="summary-item-image">
+							<img th:src="${item.imageUrl}" alt="Product Image">
+						</div>
+						<div class="summary-item-details">
+							<div class="summary-item-name" th:text="${item.productName}">Product Name</div>
+							<div class="summary-item-price" th:text="'₹' + ${#numbers.formatDecimal(item.price, 1, 2)}">₹0.00</div>
+							<div class="summary-item-quantity" th:text="'Qty: ' + ${item.quantity}">Qty: 1</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="divider"></div>
+
+				<div class="summary-row">
+					<span class="summary-label">Subtotal</span> <span
+						class="summary-value"
+						th:text="'₹' + ${#numbers.formatDecimal(subtotal, 1, 2)}">₹0.00</span>
+				</div>
+				<div class="summary-row">
+					<span class="summary-label">Shipping</span> <span
+						class="summary-value"
+						th:text="'₹' + ${#numbers.formatDecimal(shipping, 1, 2)}">₹0.00</span>
+				</div>
+				<div class="summary-row">
+					<span class="summary-label">Tax</span> <span class="summary-value"
+						th:text="'₹' + ${#numbers.formatDecimal(tax, 1, 2)}">₹0.00</span>
+				</div>
+
+				<div class="divider"></div>
+
+				<div class="summary-row total-row">
+					<span class="summary-label">Total</span> <span
+						class="summary-value"
+						th:text="'₹' + ${#numbers.formatDecimal(total, 1, 2)}">₹0.00</span>
+				</div>
+
+				<button type="submit" class="place-order-btn" onclick="placeOrder()">Place Order</button>
+			</div>
+		</div>
+	</main>
+
+	<script>
+		// Handle payment method selection
+		document.querySelectorAll('input[name="payment-method"]').forEach(radio => {
+			radio.addEventListener('change', function() {
+				document.querySelectorAll('.payment-method').forEach(method => {
+					method.classList.remove('selected');
+				});
+				this.parentElement.classList.add('selected');
+				
+				// Show/hide credit card form based on selection
+				if(this.value === 'credit-card') {
+					document.getElementById('credit-card-form').style.display = 'block';
+				} else {
+					document.getElementById('credit-card-form').style.display = 'none';
+				}
+			});
+		});
+
+		// Format card number input
+		document.getElementById('card-number').addEventListener('input', function(e) {
+			let value = e.target.value.replace(/\s+/g, '');
+			if(value.length > 0) {
+				value = value.match(new RegExp('.{1,4}', 'g')).join(' ');
+			}
+			e.target.value = value;
+		});
+
+		// Format expiry date input
+		document.getElementById('expiry-date').addEventListener('input', function(e) {
+			let value = e.target.value.replace(/\D/g, '');
+			if(value.length > 2) {
+				value = value.substring(0, 2) + '/' + value.substring(2, 4);
+			}
+			e.target.value = value;
+		});
+
+		// Place order function
+		function placeOrder() {
+			// Validate form
+			const shippingForm = document.getElementById('shipping-form');
+			if(!shippingForm.checkValidity()) {
+				shippingForm.reportValidity();
+				return;
+			}
+			
+			// Get selected payment method
+			const paymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
+			
+			// Additional validation for credit card
+			if(paymentMethod === 'credit-card') {
+				const cardNumber = document.getElementById('card-number').value.replace(/\s+/g, '');
+				const expiryDate = document.getElementById('expiry-date').value;
+				const cvv = document.getElementById('cvv').value;
+				const cardName = document.getElementById('card-name').value;
+				
+				if(!cardNumber || cardNumber.length < 16) {
+					alert('Please enter a valid card number');
+					return;
+				}
+				
+				if(!expiryDate || expiryDate.length < 5) {
+					alert('Please enter a valid expiry date (MM/YY)');
+					return;
+				}
+				
+				if(!cvv || cvv.length < 3) {
+					alert('Please enter a valid CVV');
+					return;
+				}
+				
+				if(!cardName) {
+					alert('Please enter the name on card');
+					return;
+				}
+			}
+			
+			// Submit order (in a real app, this would be an AJAX call or form submission)
+			alert('Order placed successfully!');
+			// window.location.href = '/order-confirmation';
+		}
+	</script>
+</body>
+</html>

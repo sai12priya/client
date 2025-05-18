@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Make Purchase | Inventory System</title>
+	<style>
+		:root {
+			--indigo: #4b0082;
+			--indigo-light: #6a20b4;
+			--green: #2ecc71;
+			--green-dark: #27ae60;
+			--white: #ffffff;
+			--black: #333333;
+			--gray: #f5f5f5;
+			--gray-dark: #e0e0e0;
+		}
+
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+		}
+
+		body {
+			background-color: #f9f9f9;
+			color: var(--black);
+		}
+
+		.dashboard {
+			display: flex;
+			min-height: 100vh;
+		}
+
+		/* Sidebar Navigation - Consistent with previous responses */
+		.sidebar {
+			width: 250px;
+			background-color: var(--indigo);
+			color: var(--white);
+			padding: 20px 0;
+			transition: all 0.3s;
+		}
+
+		.sidebar-header {
+			padding: 0 20px 20px;
+			border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+		}
+
+		.sidebar-header h2 {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			color: var(--white);
+		}
+
+		.nav-menu {
+			margin-top: 20px;
+		}
+
+		.nav-item {
+			list-style: none;
+		}
+
+		.nav-link {
+			display: flex;
+			align-items: center;
+			padding: 12px 20px;
+			color: var(--white);
+			text-decoration: none;
+			transition: all 0.3s;
+			gap: 10px;
+		}
+
+		.nav-link:hover,
+		.nav-link.active {
+			background-color: var(--indigo-light);
+			border-left: 4px solid var(--green);
+		}
+
+		/* Main Content */
+		.main-content {
+			flex: 1;
+			padding: 30px;
+		}
+
+		.header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 30px;
+			background-color: var(--white);
+			padding: 15px 20px;
+			border-radius: 8px;
+			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+		}
+
+		.header h1 {
+			color: var(--indigo);
+			font-size: 24px;
+		}
+
+		.user-profile {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+		}
+
+		.user-avatar {
+			width: 40px;
+			height: 40px;
+			border-radius: 50%;
+			background-color: var(--indigo);
+			color: var(--white);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-weight: bold;
+		}
+
+		/* Purchase Form Section */
+		.purchase-form {
+			background-color: var(--white);
+			border-radius: 8px;
+			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+			padding: 25px;
+			margin-bottom: 30px;
+		}
+
+		.form-group {
+			margin-bottom: 20px;
+		}
+
+		label {
+			display: block;
+			margin-bottom: 8px;
+			font-weight: 600;
+		}
+
+		select,
+		input {
+			width: 100%;
+			padding: 10px;
+			border: 1px solid var(--gray-dark);
+			border-radius: 5px;
+			font-size: 16px;
+		}
+
+		select:focus,
+		input:focus {
+			outline: none;
+			border-color: var(--indigo);
+			box-shadow: 0 0 0 2px rgba(75, 0, 130, 0.2);
+		}
+
+		.vendor-details {
+			background-color: var(--gray);
+			padding: 15px;
+			border-radius: 4px;
+			margin-top: 10px;
+			display: none;
+		}
+
+		.vendor-details.active {
+			display: block;
+		}
+
+		.submit-btn {
+			background-color: var(--green);
+			color: var(--white);
+			border: none;
+			padding: 12px 20px;
+			border-radius: 5px;
+			font-size: 16px;
+			cursor: pointer;
+			width: 100%;
+			transition: all 0.3s;
+		}
+
+		.submit-btn:hover {
+			background-color: var(--green-dark);
+		}
+
+		/* Recent Vendors Section */
+		.recent-vendors {
+			background-color: var(--white);
+			border-radius: 8px;
+			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+			padding: 25px;
+		}
+
+		.vendor-card {
+			display: flex;
+			align-items: center;
+			padding: 15px;
+			border-bottom: 1px solid var(--gray-dark);
+			cursor: pointer;
+			transition: all 0.3s;
+		}
+
+		.vendor-card:last-child {
+			border-bottom: none;
+		}
+
+		.vendor-card:hover {
+			background-color: var(--gray);
+		}
+
+		.vendor-avatar {
+			width: 40px;
+			height: 40px;
+			background-color: var(--indigo);
+			color: var(--white);
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			margin-right: 15px;
+			font-weight: bold;
+		}
+
+		.vendor-info {
+			flex-grow: 1;
+		}
+
+		.vendor-name {
+			font-weight: 600;
+			margin-bottom: 5px;
+		}
+
+		.vendor-product {
+			color: #666;
+			font-size: 14px;
+		}
+
+		.two-columns {
+			display: flex;
+			gap: 30px;
+		}
+
+		.two-columns>div {
+			flex: 1;
+		}
+
+		h2 {
+			color: var(--black);
+			margin-top: 0;
+			margin-bottom: 20px;
+			font-size: 20px;
+		}
+
+		/* No JavaScript solution using CSS and HTML only */
+		/* Show vendor details when corresponding option is selected */
+		#vendor:focus~#john-details,
+		#vendor[value="john"]~#john-details {
+			display: block;
+		}
+
+		#vendor:focus~#sarah-details,
+		#vendor[value="sarah"]~#sarah-details {
+			display: block;
+		}
+
+		#vendor:focus~#robert-details,
+		#vendor[value="robert"]~#robert-details {
+			display: block;
+		}
+
+		#vendor:focus~#alice-details,
+		#vendor[value="alice"]~#alice-details {
+			display: block;
+		}
+
+		#vendor:focus~#thomas-details,
+		#vendor[value="thomas"]~#thomas-details {
+			display: block;
+		}
+
+		/* Vendor selection from recent vendors */
+		#vendor {
+			transition: all 0.3s ease;
+		}
+
+		/* Hide all vendor details by default */
+		.vendor-details {
+			display: none;
+		}
+
+		/* Back button styling */
+		.back-btn {
+			background-color: var(--gray);
+			color: var(--black);
+			border: none;
+			padding: 8px 15px;
+			border-radius: 4px;
+			cursor: pointer;
+			text-decoration: none;
+			display: inline-block;
+			transition: all 0.3s;
+		}
+
+		.back-btn:hover {
+			background-color: var(--gray-dark);
+		}
+
+		/* Responsive adjustments */
+		@media (max-width : 768px) {
+			.sidebar {
+				width: 70px;
+				overflow: hidden;
+			}
+
+			.sidebar-header h2 span,
+			.nav-link span {
+				display: none;
+			}
+
+			.nav-link {
+				justify-content: center;
+				padding: 12px 10px;
+			}
+
+			.two-columns {
+				flex-direction: column;
+			}
+		}
+	</style>
+</head>
+
+<body>
+	<div class="dashboard">
+		<!-- Sidebar Navigation -->
+		<div class="sidebar">
+			<div class="sidebar-header">
+				<h2>
+					<span>InventoryPro</span>
+				</h2>
+			</div>
+			<ul class="nav-menu">
+				<li class="nav-item"><a href="/admin/dashboard" class="nav-link"> <span>Dashboard</span>
+					</a></li>
+				<li class="nav-item"><a href="/admin/vendor" class="nav-link">
+						<span>Vendors</span>
+					</a></li>
+				<li class="nav-item"><a href="/admin/purchase" class="nav-link active"> <span>Make Purchase</span>
+					</a></li>
+				<li class="nav-item"><a href="/admin/invoice" class="nav-link">
+						<span>Invoices</span>
+					</a></li>
+
+				<li class="nav-item"><a href="/admin/product/all" class="nav-link">
+						<span>All Products</span>
+					</a></li>
+			</ul>
+		</div>
+
+		<!-- Main Content -->
+		<div class="main-content">
+			<div class="header">
+				<h1>Make New Purchase</h1>
+				<div class="user-profile">
+					<div class="user-avatar">AD</div>
+					<span>Admin User</span>
+				</div>
+			</div>
+
+			<div class="two-columns">
+				<div>
+					<div class="purchase-form">
+						<h2>Purchase Details</h2>
+
+						<p class="success" th:if="${success}" th:text="${success}"></p>
+													<p class="error" th:if="${error}" th:text="${error}"></p>
+						<form action="/admin/purchase" method="post" th:object="${purchaseDTO}">
+    <div class="form-group">
+        <label for="vendorId">Select Vendor</label> 
+        <select id="vendorId" th:field="*{vendorId}" onchange="updateProductName()">
+            <option value="">-- Select a vendor --</option>
+            <option th:each="vendor : ${vendors}" 
+                    th:value="${vendor.id}"
+                    th:text="${vendor.vendorName} + ' (' + ${vendor.product.name} + ')'"
+                    th:data-product-name="${vendor.product.name}"
+                    th:data-product-price="${vendor.product.price}"></option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="productName">Product Name</label> 
+        <input type="text" id="productName" th:field="*{productName}" readonly>
+    </div>
+
+    <div class="form-group">
+        <label for="quantityAvailable">Quantity</label>
+        <input type="number" id="quantityAvailable" th:field="*{quantityAvailable}" min="1" value="1" oninput="calculateTotalPrice()">
+    </div>
+
+    <div class="form-group">
+        <label for="price">Unit Price ($)</label>
+        <input type="number" id="price" th:field="*{price}" min="0" step="0.01" placeholder="0.00" oninput="calculateTotalPrice()">
+    </div>
+
+    <div class="form-group">
+        <label for="purchaseDate">Purchase Date</label>
+        <input type="date" id="purchaseDate" th:field="*{purchaseDate}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="expectedDeliveryDate">Expected Delivery Date</label>
+        <input type="date" id="expectedDeliveryDate" th:field="*{expectedDeliveryDate}">
+    </div>
+
+    <div class="form-group">
+        <label for="totalAmount">Total Price ($)</label>
+        <input type="text" id="totalAmount" th:field="*{totalAmount}" readonly value="0.00">
+    </div>
+    <button type="submit" class="submit-btn">Submit Purchase Order</button>
+</form>
+
+					</div>
+				</div>
+
+				<div>
+					<div class="recent-vendors">
+						<h2>Recent Vendors</h2>
+						<div class="vendor-card" th:each="vendo : ${all8vendors}">
+
+						    <div class="vendor-avatar" th:text="${#strings.substring(vendo.vendorName, 0, 1)}">AW</div>
+
+						    <div class="vendor-info">
+
+						        <div class="vendor-name" th:text="${vendo.vendorName}">Alice Williams</div>
+
+						        <div class="vendor-product" th:text="${vendo.product.name + ' (' + vendo.product.quantityAvailable + ' products)'}">Tech Equipment (19 products)</div>
+
+						    </div>
+
+						</div>
+
+					</div>
+				</div>
+
+
+			</div>
+		</div>
+	</div>
+
+
+<script>
+function updateProductName() {
+    const vendorSelect = document.getElementById('vendorId');
+    const productInput = document.getElementById('productName');
+    const priceInput = document.getElementById('price');
+    const selectedOption = vendorSelect.options[vendorSelect.selectedIndex];
+    
+    if (selectedOption.value) {
+        productInput.value = selectedOption.getAttribute('data-product-name');
+        priceInput.value = selectedOption.getAttribute('data-product-price');
+        calculateTotalPrice();
+    } else {
+        productInput.value = '';
+        priceInput.value = '';
+    }
+}
+
+function calculateTotalPrice() {
+    const quantity = parseFloat(document.getElementById('quantityAvailable').value) || 0;
+    const price = parseFloat(document.getElementById('price').value) || 0;
+    const totalPrice = quantity * price;
+    document.getElementById('totalAmount').value = totalPrice.toFixed(2);
+}
+</script>
+</body>
+
+</html>

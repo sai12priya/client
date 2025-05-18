@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ShopSphere | Your Cart</title>
+<style>
+:root {
+	--indigo: #4b0082;
+	--indigo-light: #6a20b4;
+	--indigo-dark: #3a0068;
+	--green: #2ecc71;
+	--green-dark: #27ae60;
+	--black: #111827;
+	--white: #f9fafb;
+	--gray: #e5e7eb;
+	--gray-dark: #6b7280;
+	--sidebar-width: 250px;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+	background-color: var(--white);
+	color: var(--black);
+	min-height: 100vh;
+	display: flex;
+}
+
+/* Side Navigation */
+.side-nav {
+	width: var(--sidebar-width);
+	background-color: var(--indigo-dark);
+	color: var(--white);
+	height: 100vh;
+	position: fixed;
+	padding: 1.5rem 0;
+}
+
+.logo {
+	font-size: 1.5rem;
+	font-weight: 700;
+	color: var(--white);
+	padding: 0 1.5rem 1.5rem;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+	margin-bottom: 1.5rem;
+}
+
+.alert {
+	padding: 20px;
+	font-size: bold;
+}
+
+.alert-sucess {
+	color: green;
+}
+
+.alert-danger {
+	color: red;
+}
+
+.nav-menu {
+	list-style: none;
+}
+
+.nav-item {
+	margin-bottom: 0.5rem;
+}
+
+.nav-link {
+	display: block;
+	color: var(--white);
+	text-decoration: none;
+	padding: 0.8rem 1.5rem;
+	font-weight: 500;
+	transition: all 0.2s;
+}
+
+.nav-link:hover {
+	background-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-link.active {
+	background-color: var(--indigo);
+	border-left: 4px solid var(--green);
+}
+
+/* Main Content */
+.main-content {
+	flex: 1;
+	margin-left: var(--sidebar-width);
+	padding: 2rem;
+}
+
+/* Cart Header */
+.cart-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 2rem;
+	padding-bottom: 1rem;
+	border-bottom: 1px solid var(--gray);
+}
+
+.cart-title {
+	font-size: 1.8rem;
+	color: var(--indigo);
+	font-weight: 700;
+}
+
+.item-count {
+	color: var(--gray-dark);
+	font-size: 1rem;
+}
+
+/* Cart Items */
+.cart-item {
+	display: flex;
+	padding: 1.5rem;
+	border: 1px solid var(--gray);
+	border-radius: 8px;
+	margin-bottom: 1.5rem;
+	background-color: var(--white);
+}
+
+.cart-item-image {
+	width: 120px;
+	height: 120px;
+	background-color: var(--gray);
+	border-radius: 6px;
+	margin-right: 1.5rem;
+	overflow: hidden;
+	flex-shrink: 0;
+}
+
+.cart-item-image img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.cart-item-details {
+	flex: 1;
+}
+
+.cart-item-name {
+	font-size: 1.2rem;
+	font-weight: 600;
+	margin-bottom: 0.5rem;
+	color: var(--black);
+}
+
+.cart-item-vendor {
+	font-size: 0.9rem;
+	color: var(--gray-dark);
+	margin-bottom: 0.8rem;
+}
+
+.cart-item-price {
+	font-size: 1.2rem;
+	font-weight: 700;
+	color: var(--indigo);
+	margin-bottom: 1rem;
+}
+
+.cart-item-actions {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.quantity-control {
+	display: flex;
+	align-items: center;
+}
+
+.quantity-btn {
+	width: 32px;
+	height: 32px;
+	background-color: var(--gray);
+	border: none;
+	font-size: 1rem;
+	cursor: pointer;
+	border-radius: 4px;
+}
+
+.quantity-input {
+	width: 50px;
+	height: 32px;
+	text-align: center;
+	border: 1px solid var(--gray);
+	margin: 0 0.5rem;
+	border-radius: 4px;
+	font-weight: 600;
+}
+
+.remove-btn {
+	background-color: transparent;
+	border: 1px solid #e74c3c;
+	color: #e74c3c;
+	padding: 0.5rem 1rem;
+	border-radius: 4px;
+	cursor: pointer;
+	font-weight: 500;
+	transition: all 0.2s;
+}
+
+.remove-btn:hover {
+	background-color: #e74c3c;
+	color: white;
+}
+
+/* Order Summary */
+.order-summary {
+	background-color: var(--white);
+	border: 1px solid var(--gray);
+	border-radius: 8px;
+	padding: 1.5rem;
+	margin-top: 2rem;
+}
+
+.summary-title {
+	font-size: 1.3rem;
+	color: var(--indigo);
+	font-weight: 700;
+	margin-bottom: 1.5rem;
+	padding-bottom: 1rem;
+	border-bottom: 1px solid var(--gray);
+}
+
+.summary-row {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 1rem;
+}
+
+.summary-label {
+	color: var(--gray-dark);
+}
+
+.summary-value {
+	font-weight: 500;
+}
+
+.divider {
+	height: 1px;
+	background-color: var(--gray);
+	margin: 1.5rem 0;
+}
+
+.total-row {
+	font-weight: 700;
+	font-size: 1.1rem;
+	color: var(--indigo);
+}
+
+.checkout-btn {
+	width: 100%;
+	padding: 1rem;
+	background-color: var(--green);
+	color: white;
+	border: none;
+	border-radius: 6px;
+	font-weight: 600;
+	font-size: 1rem;
+	margin-top: 1rem;
+	cursor: pointer;
+	transition: all 0.2s;
+}
+
+.checkout-btn:hover {
+	background-color: var(--green-dark);
+}
+
+/* Empty Cart */
+.empty-cart {
+	text-align: center;
+	padding: 3rem;
+	border: 1px dashed var(--gray);
+	border-radius: 8px;
+	background-color: rgba(255, 255, 255, 0.5);
+}
+
+.empty-cart-title {
+	font-size: 1.5rem;
+	color: var(--black);
+	margin-bottom: 1rem;
+}
+
+.empty-cart-message {
+	color: var(--gray-dark);
+	margin-bottom: 2rem;
+}
+
+.shop-btn {
+	display: inline-block;
+	padding: 0.8rem 1.5rem;
+	background-color: var(--indigo);
+	color: white;
+	border-radius: 6px;
+	text-decoration: none;
+	font-weight: 500;
+	transition: all 0.2s;
+	margin-top:10px;
+}
+
+.shop-btn:hover {
+	background-color: var(--indigo-light);
+}
+
+/* Responsive Design */
+@media ( max-width : 1024px) {
+	.side-nav {
+		width: 220px;
+	}
+	.main-content {
+		margin-left: 220px;
+	}
+}
+
+@media ( max-width : 768px) {
+	.side-nav {
+		width: 100%;
+		height: auto;
+		position: static;
+		padding: 1rem;
+	}
+	.main-content {
+		margin-left: 0;
+	}
+	.nav-menu {
+		display: flex;
+		overflow-x: auto;
+		padding-bottom: 0.5rem;
+	}
+	.nav-item {
+		margin-bottom: 0;
+		margin-right: 0.5rem;
+	}
+	.nav-link {
+		padding: 0.5rem 1rem;
+		white-space: nowrap;
+	}
+	.cart-item {
+		flex-direction: column;
+	}
+	.cart-item-image {
+		width: 100%;
+		height: 180px;
+		margin-right: 0;
+		margin-bottom: 1rem;
+	}
+}
+</style>
+</head>
+<body>
+	<!-- Side Navigation -->
+	<nav class="side-nav">
+		<div class="logo">ShopSphere</div>
+		<ul class="nav-menu">
+			<li class="nav-item"><a href="/user/dashboard" class="nav-link">Dashboard</a>
+			</li>
+			<li class="nav-item"><a href="/user/products" class="nav-link">All
+					Products</a></li>
+			<li class="nav-item"><a href="/user/orders" class="nav-link">Orders</a>
+			</li>
+			<li class="nav-item"><a href="/user/cart"
+				class="nav-link active">Cart</a></li>
+			<li class="nav-item"><a href="/user/invoices" class="nav-link">Invoices</a>
+			</li>
+		</ul>
+	</nav>
+
+	<!-- Main Content -->
+	<main class="main-content">
+		<div class="cart-header">
+			<h1 class="cart-title">Your Shopping Cart</h1>
+			<div class="item-count"
+				th:text="${cartItems != null} ? ${cartItems.size() + ' items'} : '0 items'"></div>
+		</div>
+
+		<!-- Success/Error Messages -->
+		<div th:if="${success}" class="alert alert-success"
+			th:text="${success}"></div>
+		<div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+		<!-- Cart Items -->
+		<div th:if="${cartItems != null and !cartItems.empty}">
+			<div class="cart-item" th:each="item : ${cartItems}">
+
+				<div class="cart-item-details">
+					<h3 class="cart-item-name" th:text="${item.productName}">Product
+						Name</h3>
+					<div class="cart-item-price"
+						th:text="'₹' + ${#numbers.formatDecimal(item.price, 1, 2)}">₹0.00</div>
+					<div
+						style="display: flex; justify-content: flex-end; gap: 10px; align-items: center;">
+						<form th:action="@{/user/cart/update}" method="post" 
+      class="cart-item-actions"
+      style="display: flex; gap: 5px; align-items: center;">
+    <input type="hidden" name="itemId" th:value="${item.id}">
+    <div class="quantity-control" style="display: flex; align-items: center;">
+        <button type="button" class="quantity-btn minus-btn"
+                onclick="updateQuantity(this, -1)"
+                style="width: 36px; height: 36px; background: #f0f0f0; border: 1px solid #ddd; border-radius: 4px 0 0 4px; cursor: pointer;">-</button>
+        <input type="number" name="quantity" class="quantity-input"
+               th:value="${item.quantity}" 
+               min="1"
+               th:max="${availableQuantities[item.productId]}"
+               data-max="${availableQuantities[item.productId]}"
+               required
+               onchange="validateQuantity(this)"
+               style="width: 40px; height: 36px; text-align: center; font-size: large; border: 1px solid #ddd; border-left: none; border-right: none;">
+        <button type="button" class="quantity-btn plus-btn"
+                onclick="updateQuantity(this, 1)"
+                style="width: 36px; height: 36px; background: #f0f0f0; border: 1px solid #ddd; border-radius: 0 4px 4px 0; cursor: pointer;">+</button>
+    </div>
+    <button type="submit" class="update-btn"
+            style="padding: 10px 15px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">Update</button>
+</form>
+
+						<form th:action="@{/user/cart/remove/{id}(id=${item.id})}"
+							method="post" style="margin: 0;">
+							<button type="submit" class="remove-btn"
+								style="padding: 10px 15px; background: #f44336; color: white; border: none; border-radius: 4px; cursor: pointer;">Remove</button>
+						</form>
+					</div>
+				</div>
+			</div>
+
+			<!-- Order Summary -->
+			<div class="order-summary">
+				<h3 class="summary-title">Order Summary</h3>
+
+				<div class="summary-row">
+					<span class="summary-label">Subtotal</span> <span
+						class="summary-value"
+						th:text="'₹' + ${#numbers.formatDecimal(subtotal, 1, 2)}">₹0.00</span>
+				</div>
+				<div class="summary-row">
+					<span class="summary-label">Shipping</span> <span
+						class="summary-value"
+						th:text="'₹' + ${#numbers.formatDecimal(shipping, 1, 2)}">₹0.00</span>
+				</div>
+				<div class="summary-row">
+					<span class="summary-label">Tax</span> <span class="summary-value"
+						th:text="'₹' + ${#numbers.formatDecimal(tax, 1, 2)}">₹0.00</span>
+				</div>
+
+				<div class="divider"></div>
+
+				<div class="summary-row total-row">
+					<span class="summary-label">Total</span> <span
+						class="summary-value"
+						th:text="'₹' + ${#numbers.formatDecimal(total, 1, 2)}">₹0.00</span>
+				</div>
+
+				<form th:action="@{cart/checkout}" method="post">
+				 <input type="hidden" name="subtotal" th:value="${subtotal}">
+    <input type="hidden" name="shipping" th:value="${shipping}">
+    <input type="hidden" name="tax" th:value="${tax}">
+    <input type="hidden" name="total" th:value="${total}">
+    
+					<button type="submit" class="checkout-btn">Proceed to
+						Checkout</button>
+				</form>
+
+				<a href="/user/products" class="shop-btn"> Continue Shopping </a>
+			</div>
+		</div>
+
+		<!-- Empty Cart State -->
+		<div class="empty-cart"
+			th:if="${cartItems == null or cartItems.empty}">
+			<h2 class="empty-cart-title">Your Cart is Empty</h2>
+			<p class="empty-cart-message">Looks like you haven't added any
+				items to your cart yet.</p>
+			<a href="/user/products" class="shop-btn">Browse Products</a>
+		</div>
+	</main>
+	<script>
+	function updateQuantity(button, change) {
+	    const input = button.parentElement.querySelector('.quantity-input');
+	    const max = parseInt(input.getAttribute('data-max')) || Infinity;
+	    let newValue = parseInt(input.value) + change;
+	    
+	    // Ensure value stays within bounds
+	    newValue = Math.max(1, Math.min(newValue, max));
+	    
+	    input.value = newValue;
+	    
+	    // Update button states
+	    updateButtonStates(input);
+	}
+
+	function validateQuantity(input) {
+	    const max = parseInt(input.getAttribute('data-max')) || Infinity;
+	    let value = parseInt(input.value);
+	    
+	    if (isNaN(value)) {
+	        value = 1;
+	    }
+	    
+	    // Ensure value stays within bounds
+	    value = Math.max(1, Math.min(value, max));
+	    
+	    input.value = value;
+	    updateButtonStates(input);
+	}
+
+	function updateButtonStates(input) {
+	    const max = parseInt(input.getAttribute('data-max')) || Infinity;
+	    const value = parseInt(input.value);
+	    const container = input.parentElement;
+	    
+	    // Disable minus button if at minimum
+	    container.querySelector('.minus-btn').disabled = (value <= 1);
+	    
+	    // Disable plus button if at maximum
+	    container.querySelector('.plus-btn').disabled = (value >= max);
+	}
+
+	// Initialize button states on page load
+	document.querySelectorAll('.quantity-input').forEach(input => {
+	    updateButtonStates(input);
+	});
+	</script>
+</body>
+</html>

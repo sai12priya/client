@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Invoices</title>
+    <style>
+        :root {
+            --indigo: #4b0082;
+            --indigo-light: #6a20b4;
+            --indigo-dark: #3a0068;
+            --green: #2ecc71;
+            --green-dark: #27ae60;
+            --yellow: #f39c12;
+            --yellow-light: #f1c40f;
+            --blue: #3498db;
+            --blue-light: #2980b9;
+            --black: #111827;
+            --white: #f9fafb;
+            --gray: #e5e7eb;
+            --gray-dark: #6b7280;
+            --sidebar-width: 250px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--white);
+            color: var(--black);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--indigo);
+            color: var(--white);
+            padding: 1.5rem 0;
+            height: 100vh;
+            position: sticky;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            padding: 0 1.5rem 1.5rem;
+            border-bottom: 1px solid var(--indigo-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .sidebar-nav {
+            flex-grow: 1;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            color: var(--white);
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            transition: background-color 0.3s;
+        }
+
+        .nav-link:hover {
+            background-color: var(--indigo-light);
+        }
+
+        .nav-link.active {
+            background-color: var(--indigo-dark);
+            border-left: 4px solid var(--yellow-light);
+        }
+
+        .nav-link i {
+            margin-right: 0.75rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .cart-count {
+            background-color: var(--yellow);
+            color: var(--black);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.7rem;
+            margin-left: auto;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 2rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--indigo-dark);
+            border-bottom: 2px solid var(--indigo-light);
+            padding-bottom: 0.5rem;
+        }
+
+        .customer-info {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .customer-info h2 {
+            color: var(--indigo-dark);
+            margin-bottom: 1rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .info-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: var(--gray-dark);
+            display: block;
+        }
+
+        .info-value {
+            color: var(--black);
+        }
+
+        .invoices-list {
+            margin-top: 2rem;
+        }
+
+        .invoice-card {
+            background-color: var(--white);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .invoice-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .invoice-header {
+            background-color: var(--indigo-light);
+            color: var(--white);
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .invoice-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .invoice-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-paid {
+            background-color: var(--green-dark);
+        }
+
+        .status-pending {
+            background-color: var(--yellow);
+            color: var(--black);
+        }
+
+        .status-cancelled {
+            background-color: var(--gray-dark);
+        }
+
+        .invoice-body {
+            padding: 1.5rem;
+        }
+
+        .invoice-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .invoice-items {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+        }
+
+        .invoice-items th {
+            background-color: var(--gray);
+            color: var(--black);
+            padding: 0.75rem;
+            text-align: left;
+        }
+
+        .invoice-items td {
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--gray);
+        }
+
+        .invoice-items tr:last-child td {
+            border-bottom: none;
+        }
+
+        .invoice-total {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 1rem;
+        }
+
+        .total-amount {
+            background-color: var(--gray);
+            padding: 1rem 1.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+            color: var(--indigo-dark);
+        }
+
+        .invoice-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s;
+        }
+
+        .btn-primary {
+            background-color: var(--indigo);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--indigo-dark);
+        }
+
+        .btn-secondary {
+            background-color: var(--gray);
+            color: var(--black);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--gray-dark);
+            color: var(--white);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 1rem 0;
+            }
+            
+            .sidebar-nav {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 0.5rem;
+            }
+            
+            .nav-item {
+                margin-bottom: 0;
+            }
+            
+            .nav-link {
+                padding: 0.5rem 1rem;
+                border-radius: 4px;
+            }
+            
+            .invoice-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .invoice-actions {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+    
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-brand">ShopEase</div>
+        <nav class="sidebar-nav">
+            <div class="nav-item">
+                <a href="/user/dashboard" class="nav-link">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="/user/products" class="nav-link">
+                    <i class="fas fa-box-open"></i>
+                    <span>All Products</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="/user/orders" class="nav-link">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>Orders</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="/user/cart" class="nav-link">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Cart</span>
+                    <span class="cart-count" id="cartCounter">0</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="/user/invoices" class="nav-link active">
+                    <i class="fas fa-file-invoice"></i>
+                    <span>Invoices</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="logout.html" class="nav-link">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <h1 class="page-title">Your Invoices</h1>
+        
+        <div class="customer-info">
+            <h2>Customer Information</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Customer ID</span>
+                    <span class="info-value">CUST-78945</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Name</span>
+                    <span class="info-value">John Doe</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Email</span>
+                    <span class="info-value">john.doe@example.com</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Phone</span>
+                    <span class="info-value">+1 (555) 123-4567</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Total Orders</span>
+                    <span class="info-value">3</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Member Since</span>
+                    <span class="info-value">January 15, 2022</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="invoices-list">
+            <!-- Invoice 1 -->
+            <div class="invoice-card">
+                <div class="invoice-header">
+                    <div class="invoice-title">Invoice #INV-2023-1001</div>
+                    <div class="invoice-status status-paid">Paid</div>
+                </div>
+                <div class="invoice-body">
+                    <div class="invoice-details">
+                        <div class="info-item">
+                            <span class="info-label">Date</span>
+                            <span class="info-value">March 12, 2023</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Payment Method</span>
+                            <span class="info-value">Credit Card (VISA ****4242)</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Shipping Address</span>
+                            <span class="info-value">123 Main St, Apt 4B, New York, NY 10001</span>
+                        </div>
+                    </div>
+                    
+                    <table class="invoice-items">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Qty</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Wireless Headphones</td>
+                                <td>$99.99</td>
+                                <td>1</td>
+                                <td>$99.99</td>
+                            </tr>
+                            <tr>
+                                <td>Bluetooth Speaker</td>
+                                <td>$59.99</td>
+                                <td>2</td>
+                                <td>$119.98</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="invoice-total">
+                        <div class="total-amount">
+                            Subtotal: $219.97<br>
+                            Shipping: $5.99<br>
+                            Tax: $17.60<br>
+                            <strong>Total: $243.56</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="invoice-actions">
+                        <button class="btn btn-secondary">
+                            <i class="fas fa-print"></i> Print Invoice
+                        </button>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-download"></i> Download PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Invoice 2 -->
+            <div class="invoice-card">
+                <div class="invoice-header">
+                    <div class="invoice-title">Invoice #INV-2023-0872</div>
+                    <div class="invoice-status status-paid">Paid</div>
+                </div>
+                <div class="invoice-body">
+                    <div class="invoice-details">
+                        <div class="info-item">
+                            <span class="info-label">Date</span>
+                            <span class="info-value">February 5, 2023</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Payment Method</span>
+                            <span class="info-value">PayPal</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Shipping Address</span>
+                            <span class="info-value">123 Main St, Apt 4B, New York, NY 10001</span>
+                        </div>
+                    </div>
+                    
+                    <table class="invoice-items">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Qty</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Smart Watch</td>
+                                <td>$199.99</td>
+                                <td>1</td>
+                                <td>$199.99</td>
+                            </tr>
+                            <tr>
+                                <td>Laptop Stand</td>
+                                <td>$29.99</td>
+                                <td>1</td>
+                                <td>$29.99</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="invoice-total">
+                        <div class="total-amount">
+                            Subtotal: $229.98<br>
+                            Shipping: $0.00 (Free Shipping)<br>
+                            Tax: $18.40<br>
+                            <strong>Total: $248.38</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="invoice-actions">
+                        <button class="btn btn-secondary">
+                            <i class="fas fa-print"></i> Print Invoice
+                        </button>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-download"></i> Download PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Invoice 3 -->
+            <div class="invoice-card">
+                <div class="invoice-header">
+                    <div class="invoice-title">Invoice #INV-2022-1543</div>
+                    <div class="invoice-status status-paid">Paid</div>
+                </div>
+                <div class="invoice-body">
+                    <div class="invoice-details">
+                        <div class="info-item">
+                            <span class="info-label">Date</span>
+                            <span class="info-value">December 20, 2022</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Payment Method</span>
+                            <span class="info-value">Credit Card (MC ****9821)</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Shipping Address</span>
+                            <span class="info-value">456 Oak Ave, Boston, MA 02108</span>
+                        </div>
+                    </div>
+                    
+                    <table class="invoice-items">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Qty</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Wireless Keyboard</td>
+                                <td>$49.99</td>
+                                <td>1</td>
+                                <td>$49.99</td>
+                            </tr>
+                            <tr>
+                                <td>Power Bank</td>
+                                <td>$39.99</td>
+                                <td>1</td>
+                                <td>$39.99</td>
+                            </tr>
+                            <tr>
+                                <td>Laptop Stand</td>
+                                <td>$29.99</td>
+                                <td>1</td>
+                                <td>$29.99</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="invoice-total">
+                        <div class="total-amount">
+                            Subtotal: $119.97<br>
+                            Shipping: $5.99<br>
+                            Tax: $9.60<br>
+                            <strong>Total: $135.56</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="invoice-actions">
+                        <button class="btn btn-secondary">
+                            <i class="fas fa-print"></i> Print Invoice
+                        </button>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-download"></i> Download PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Cart functionality (shared with other pages)
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        
+        // Update cart counter on page load
+        function updateCartCounter() {
+            const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+            document.getElementById('cartCounter').textContent = totalItems;
+        }
+        
+        updateCartCounter();
+    </script>
+</body>
+</html>

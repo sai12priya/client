@@ -353,7 +353,7 @@ body {
 }
 
 /* Responsive Design */
-@media (max-width: 1024px) {
+@media ( max-width : 1024px) {
 	.side-nav {
 		width: 220px;
 	}
@@ -362,7 +362,7 @@ body {
 	}
 }
 
-@media (max-width: 768px) {
+@media ( max-width : 768px) {
 	.side-nav {
 		width: 100%;
 		height: auto;
@@ -455,39 +455,43 @@ body {
 					<form id="shipping-form">
 						<div class="form-row">
 							<div class="form-group">
-								<label for="first-name" class="form-label">First Name</label>
-								<input type="text" id="first-name" class="form-input" required>
+								<label for="first-name" class="form-label">First Name</label> <input
+									type="text" id="first-name" class="form-input" name="firstName"
+									required>
 							</div>
 							<div class="form-group">
-								<label for="last-name" class="form-label">Last Name</label>
-								<input type="text" id="last-name" class="form-input" required>
+								<label for="last-name" class="form-label">Last Name</label> <input
+									type="text" id="last-name" class="form-input" name="lastName"
+									required>
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="address" class="form-label">Address</label>
-							<input type="text" id="address" class="form-input" required>
+							<label for="address" class="form-label">Address</label> <input
+								type="text" id="address" class="form-input" name="address"
+								required>
 						</div>
 						<div class="form-group">
-							<label for="address2" class="form-label">Address 2 (Optional)</label>
-							<input type="text" id="address2" class="form-input">
+							<label for="address2" class="form-label">Address 2
+								(Optional)</label> <input type="text" id="address2" class="form-input"
+								name="address2">
 						</div>
 						<div class="form-row">
 							<div class="form-group">
-								<label for="city" class="form-label">City</label>
-								<input type="text" id="city" class="form-input" required>
+								<label for="city" class="form-label">City</label> <input
+									type="text" id="city" class="form-input" name="city" required>
 							</div>
 							<div class="form-group">
-								<label for="state" class="form-label">State/Province</label>
-								<input type="text" id="state" class="form-input" required>
+								<label for="state" class="form-label">State/Province</label> <input
+									type="text" id="state" class="form-input" name="state" required>
 							</div>
 							<div class="form-group">
-								<label for="zip" class="form-label">ZIP/Postal Code</label>
-								<input type="text" id="zip" class="form-input" required>
+								<label for="zip" class="form-label">ZIP/Postal Code</label> <input
+									type="text" id="zip" class="form-input" name="postal" required>
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="country" class="form-label">Country</label>
-							<select id="country" class="form-input" required>
+							<label for="country" class="form-label">Country</label> <select
+								id="country" class="form-input" name="country" required>
 								<option value="">Select Country</option>
 								<option value="US">United States</option>
 								<option value="IN">India</option>
@@ -497,8 +501,8 @@ body {
 							</select>
 						</div>
 						<div class="form-group">
-							<label for="phone" class="form-label">Phone Number</label>
-							<input type="tel" id="phone" class="form-input" required>
+							<label for="phone" class="form-label">Phone Number</label> <input
+								type="tel" id="phone" name="phone" class="form-input" required>
 						</div>
 					</form>
 				</div>
@@ -507,48 +511,47 @@ body {
 				<div class="section">
 					<h2 class="section-title">Payment Method</h2>
 					<div class="payment-methods">
-						<label class="payment-method selected">
-							<input type="radio" name="payment-method" value="credit-card" checked>
-							<img src="https://cdn-icons-png.flaticon.com/512/179/179457.png" alt="Credit Card" class="payment-icon">
-							<span>Credit/Debit Card</span>
-						</label>
-						<label class="payment-method">
-							<input type="radio" name="payment-method" value="paypal">
-							<img src="https://cdn-icons-png.flaticon.com/512/174/174861.png" alt="PayPal" class="payment-icon">
-							<span>PayPal</span>
-						</label>
-						<label class="payment-method">
-							<input type="radio" name="payment-method" value="upi">
-							<img src="https://cdn-icons-png.flaticon.com/512/825/825454.png" alt="UPI" class="payment-icon">
-							<span>UPI Payment</span>
-						</label>
-						<label class="payment-method">
-							<input type="radio" name="payment-method" value="cod">
-							<img src="https://cdn-icons-png.flaticon.com/512/2331/2331895.png" alt="Cash on Delivery" class="payment-icon">
-							<span>Cash on Delivery</span>
+						<label class="payment-method selected"> <input
+							type="radio" name="payment-method" value="credit-card" checked>
+							<img src="https://cdn-icons-png.flaticon.com/512/179/179457.png"
+							alt="Credit Card" class="payment-icon"> <span>Credit/Debit
+								Card</span>
+						</label> <label class="payment-method"> <input type="radio"
+							name="payment-method" value="paypal"> <img
+							src="https://cdn-icons-png.flaticon.com/512/174/174861.png"
+							alt="PayPal" class="payment-icon"> <span>PayPal</span>
+						</label> <label class="payment-method"> <input type="radio"
+							name="payment-method" value="upi"> <img
+							src="https://cdn-icons-png.flaticon.com/512/825/825454.png"
+							alt="UPI" class="payment-icon"> <span>UPI Payment</span>
+						</label> <label class="payment-method"> <input type="radio"
+							name="payment-method" value="cod"> <img
+							src="https://cdn-icons-png.flaticon.com/512/2331/2331895.png"
+							alt="Cash on Delivery" class="payment-icon"> <span>Cash
+								on Delivery</span>
 						</label>
 					</div>
 
 					<!-- Credit Card Form (shown when credit card is selected) -->
 					<div id="credit-card-form" style="margin-top: 1.5rem;">
 						<div class="form-group">
-							<label for="card-number" class="form-label">Card Number</label>
-							<input type="text" id="card-number" class="form-input" placeholder="1234 5678 9012 3456">
+							<label for="card-number" class="form-label">Card Number</label> <input
+								type="text" id="card-number" name="cardno" class="form-input"
+								placeholder="1234 5678 9012 3456">
 						</div>
 						<div class="form-row">
 							<div class="form-group">
 								<label for="expiry-date" class="form-label">Expiry Date</label>
-								<input type="text" id="expiry-date" class="form-input" placeholder="MM/YY">
+								<input type="text" id="expiry-date" name="edate"
+									class="form-input" placeholder="MM/YY">
 							</div>
 							<div class="form-group">
-								<label for="cvv" class="form-label">CVV</label>
-								<input type="text" id="cvv" class="form-input" placeholder="123">
+								<label for="cvv" class="form-label">CVV</label> <input
+									type="text" id="cvv" class="form-input" name="cvv"
+									placeholder="123">
 							</div>
 						</div>
-						<div class="form-group">
-							<label for="card-name" class="form-label">Name on Card</label>
-							<input type="text" id="card-name" class="form-input">
-						</div>
+						
 					</div>
 				</div>
 			</div>
@@ -560,13 +563,13 @@ body {
 				<!-- Order Items -->
 				<div th:each="item : ${cartItems}">
 					<div class="summary-item">
-						<div class="summary-item-image">
-							<img th:src="${item.imageUrl}" alt="Product Image">
-						</div>
+
 						<div class="summary-item-details">
-							<div class="summary-item-name" th:text="${item.productName}">Product Name</div>
-							<div class="summary-item-price" th:text="'₹' + ${#numbers.formatDecimal(item.price, 1, 2)}">₹0.00</div>
-							<div class="summary-item-quantity" th:text="'Qty: ' + ${item.quantity}">Qty: 1</div>
+							<div class="summary-item-name" th:text="${item.productName}">Product
+								Name</div>
+							<!--  <div class="summary-item-price" th:text="'₹' + ${#numbers.formatDecimal(item.price, 1, 2)}">₹0.00</div>-->
+							<div class="summary-item-quantity"
+								th:text="'Qty: ' + ${item.quantity}">Qty: 1</div>
 						</div>
 					</div>
 				</div>
@@ -595,8 +598,23 @@ body {
 						class="summary-value"
 						th:text="'₹' + ${#numbers.formatDecimal(total, 1, 2)}">₹0.00</span>
 				</div>
+				<form th:action="@{/user/orders/place-order}" method="post"
+					id="order-form">
+					<!-- Shipping Information -->
+					<input type="hidden" name="firstName"
+						th:value="${#strings.trim(shippingForm.firstName)}"> <input
+						type="hidden" name="lastName"
+						th:value="${#strings.trim(shippingForm.lastName)}">
+					<!-- Add all other shipping fields as hidden inputs -->
 
-				<button type="submit" class="place-order-btn" onclick="placeOrder()">Place Order</button>
+					<!-- Payment Information -->
+					<input type="hidden" name="paymentMethod"
+						th:value="${paymentMethod}"> <input type="hidden"
+						name="cardNumber" th:value="${cardNumber}">
+					<!-- Add other payment fields as needed -->
+
+					<button type="submit" class="place-order-btn">Place Order</button>
+				</form>
 			</div>
 		</div>
 	</main>

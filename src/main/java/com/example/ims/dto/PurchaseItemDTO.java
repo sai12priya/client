@@ -3,10 +3,10 @@ package com.example.ims.dto;
 import java.math.BigDecimal;
 
 public class PurchaseItemDTO {
-	private Long productId;
+    private Long productId;
     private String productName;
     private int quantity;
-    private BigDecimal price;
+    private BigDecimal unitPrice;
 	public Long getProductId() {
 		return productId;
 	}
@@ -25,11 +25,13 @@ public class PurchaseItemDTO {
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
-	public BigDecimal getPrice() {
-		return price;
+	public BigDecimal getUnitPrice() {
+		return unitPrice;
 	}
-	public void setPrice(BigDecimal price) {
-		this.price = price;
+	public void setUnitPrice(BigDecimal unitPrice) {
+		this.unitPrice = unitPrice;
 	}
+
+    // Getters and setters
     
 }

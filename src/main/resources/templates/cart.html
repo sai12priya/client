@@ -460,7 +460,7 @@ body {
 						th:text="'₹' + ${#numbers.formatDecimal(total, 1, 2)}">₹0.00</span>
 				</div>
 
-				<form th:action="@{cart/checkout}" method="post">
+				<form th:action="@{cart/checkout}" method="get">
 				 <input type="hidden" name="subtotal" th:value="${subtotal}">
     <input type="hidden" name="shipping" th:value="${shipping}">
     <input type="hidden" name="tax" th:value="${tax}">
